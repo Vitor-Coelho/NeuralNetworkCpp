@@ -1,4 +1,4 @@
-#include "matrix.hpp"
+#include "..\include\matrix.hpp"
 
 std::mt19937 mt(time(NULL));
 std::uniform_real_distribution<float> dist(-1, 1);

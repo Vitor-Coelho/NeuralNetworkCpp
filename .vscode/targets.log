@@ -7,7 +7,7 @@ make.exe all --print-data-base --no-builtin-variables --no-builtin-rules --quest
 # There is NO WARRANTY, to the extent permitted by law.
  
 
-# Make data base, printed on Fri Jun 17 18:39:52 2022
+# Make data base, printed on Fri Jun 17 19:27:21 2022
 
 # Variables
 
@@ -64,7 +64,7 @@ PROGRAMDATA = C:\ProgramData
 # environment
 ANSYS_SYSDIR32 = win32
 # environment
-VSCODE_IPC_HOOK_EXTHOST = \\.\pipe\vscode-ipc-83b72066-8088-4a98-964b-fe5cfbd3e0ea-sock
+VSCODE_IPC_HOOK_EXTHOST = \\.\pipe\vscode-ipc-c587745e-aa80-41ea-a38d-d0d2e63f0b7e-sock
 # environment
 VSCODE_CWD = C:\Users\vitor\Documents\Desk\Arquivos\Projetos\C-Cpp
 # environment
@@ -92,7 +92,7 @@ NVTOOLSEXT_PATH = C:\Program Files\NVIDIA Corporation\NvToolsExt\
 # automatic
 %F = $(notdir $%)
 # environment
-CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_16216_CXEPRJDDNHRMQNOB
+CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_12192_WMXSISRRRAPJPVQI
 # environment
 CUDA_PATH_V10_2 = C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2
 # environment
@@ -138,8 +138,7 @@ MAKE = $(MAKE_COMMAND)
 # default
 MAKECMDGOALS := all
 # default
-MAKE_VER 
-SION := 3.82.90
+MAKE_VERSION := 3.82.90
 # makefile
 .DEFAULT_GOAL := 
 # environment
@@ -219,7 +218,7 @@ LANG = C
 # environment
 PROCESSOR_LEVEL = 6
 # environment
-VSCODE_PID = 16216
+VSCODE_PID = 12192
 # environment
 USERDOMAIN_ROAMINGPROFILE = LAPTOP-LLFFKN90
 # variable set hash-table stats:
@@ -239,10 +238,9 @@ USERDOMAIN_ROAMINGPROFILE = LAPTOP-LLFFKN90
 # C:\windows\System32\WindowsPowerShell\v1.0\ (key C:/windows/System32/WindowsPowerShell/v1.0/, mtime 1602729237): 29 files, no impossibilities.
 # C:\WINDOWS\System32\Wbem (key C:/WINDOWS/System32/Wbem, mtime 1646995847): 155 files, no impossibilities.
 # C:\Users\vitor\AppData\Local\Microsoft\WindowsApps (key C:/Users/vitor/AppData/Local/Microsoft/WindowsApps, mtime 1655303913): 21 files, no impossibilities.
-# . (key c:/Users/vitor/Documents/Desk/Arquivos/Projetos/C-Cpp/NeuralNetworkCpp, mtime 1655471860): 7 files, no impossibilities.
+# . (key c:/Users/vitor/Documents/Desk/Arquivos/Projetos/C-Cpp/NeuralNetworkCpp, mtime 1655502016): 11 files, no impossibilities.
 # C:\Program Files (x86)\Common Files\Oracle\Java\javapath (key C:/Program Files (x86)/Common Files/Oracle/Java/javapath, mtime 1566052509): 5 files, no impossibilities.
-# C:\Users\vi 
-tor\AppData\Local\GitHubDesktop\bin (key C:/Users/vitor/AppData/Local/GitHubDesktop/bin, mtime 1585617014): 4 files, no impossibilities.
+# C:\Users\vitor\AppData\Local\GitHubDesktop\bin (key C:/Users/vitor/AppData/Local/GitHubDesktop/bin, mtime 1585617014): 4 files, no impossibilities.
 # C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\iCLS\ (key C:/Program Files (x86)/Intel/Intel(R) Management Engine Components/iCLS/, mtime 1611196400): 8 files, no impossibilities.
 # C:\Program Files\NVIDIA Corporation\Nsight Compute 2019.5.0\ (key C:/Program Files/NVIDIA Corporation/Nsight Compute 2019.5.0/, mtime 1595443461): 10 files, no impossibilities.
 # C:\Program Files\Git\cmd (key C:/Program Files/Git/cmd, mtime 1585616851): 8 files, no impossibilities.
@@ -276,7 +274,7 @@ tor\AppData\Local\GitHubDesktop\bin (key C:/Users/vitor/AppData/Local/GitHubDesk
 # C:\Program Files\PuTTY\ (key C:/Program Files/PuTTY/, mtime 1605906253): 12 files, no impossibilities.
 # C:\WINDOWS\system32 (key C:/WINDOWS/system32, mtime 1655469293): 3109 files, no impossibilities.
 
-# 7856 files, no impossibilities in 43 directories.
+# 7860 files, no impossibilities in 43 directories.
 
 # Implicit Rules
 
@@ -332,15 +330,15 @@ GNUmakefile:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 9 (8) / strings = 4337 / storage = 67524 B / avg = 15 B
-# current buf: size = 8174 B / used = 2193 B / count = 139 / avg = 15 B
-# other used: total = 59350 B / count = 4198 / avg = 14 B
-# other free: total = 61 B / max = 10 B / min = 5 B / avg = 7 B
+# strcache buffers: 9 (8) / strings = 4341 / storage = 67562 B / avg = 15 B
+# current buf: size = 8174 B / used = 2253 B / count = 143 / avg = 15 B
+# other used: total = 59388 B / count = 4198 / avg = 14 B
+# other free: total = 83 B / max = 14 B / min = 4 B / avg = 10 B
 
-# strcache performance: lookups = 7907 / hit rate = 45%
+# strcache performance: lookups = 7911 / hit rate = 45%
 # hash-table stats:
-# Load=4337/8192=53%, Rehash=0, Collisions=3207/7907=41%
-# Finished Make data base on Fri Jun 17 18:39:52 2022
+# Load=4341/8192=53%, Rehash=0, Collisions=3211/7911=41%
+# Finished Make data base on Fri Jun 17 19:27:21 2022
 
  
 make.exe: *** No rule to make target 'all'.  Stop.

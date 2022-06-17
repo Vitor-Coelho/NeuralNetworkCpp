@@ -1,3 +1,6 @@
+#ifndef NN_H
+#define NN_H
+
 #include <vector>
 #include <string>
 #include <stdexcept>
@@ -35,3 +38,5 @@ class NeuralNetwork{
         void saveToFile(std::string path);
 
 };
+
+#endif
