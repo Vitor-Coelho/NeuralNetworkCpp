@@ -30,12 +30,17 @@ class NeuralNetwork{
 
         void printWeights();
 
+        int getNumLayers();
         std::vector<size_t> getLayers();
         std::vector<Matrix*> getWeights();
         std::vector<Matrix(*)(Matrix)> getActivations();
 
+        void assignNN(NeuralNetwork nn);
+
         Matrix feedforward(Matrix input, bool addBias=true);
         void saveToFile(std::string path);
+
+        void operator=(NeuralNetwork nn);
 
 };
 

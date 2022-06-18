@@ -98,7 +98,21 @@ Matrix NeuralNetwork::feedforward(Matrix input, bool addBias){
 
 void NeuralNetwork::saveToFile(std::string path){} // TODO
 
+void NeuralNetwork::assignNN(NeuralNetwork nn){
+    numLayers = nn.getNumLayers();
+    layerSizes = nn.getLayers();
+    activations = nn.getActivations();
 
+    for(auto i=0; i < numLayers - 1; i++){
+        *(weights[i]) = *(nn.getWeights()[i]);
+    }
+}
+
+void NeuralNetwork::operator=(NeuralNetwork nn){
+    this->assignNN(nn);
+}
+
+int NeuralNetwork::getNumLayers(){return numLayers;}
 std::vector<size_t> NeuralNetwork::getLayers(){return layerSizes;}
 std::vector<Matrix*> NeuralNetwork::getWeights(){return weights;}
 std::vector<Matrix(*)(Matrix)> NeuralNetwork::getActivations(){return activations;}

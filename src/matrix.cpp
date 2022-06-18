@@ -1,4 +1,4 @@
-#include "..\include\matrix.hpp"
+#include "matrix.hpp"
 
 std::mt19937 mt(time(NULL));
 std::uniform_real_distribution<float> dist(-1, 1);
@@ -228,8 +228,10 @@ Matrix Matrix::insert(Matrix toAppend, size_t idx, bool row){
             throw std::invalid_argument("Matrices must have the same number of rows");
 
         size_t end = (*this->getValues()).size();
+        size_t numInserted = 0;
         for(size_t i = 0; i < end; i += cols){
-            (*this->getValues()).insert((*this->getValues()).begin() + i + idx, (*toAppend.getValues()).at(i/cols));
+            (*this->getValues()).insert((*this->getValues()).begin() + i + numInserted + idx, (*toAppend.getValues()).at(i/cols));
+            numInserted++;
         }
 
         this->cols = cols + toAppend.numCols();
@@ -243,6 +245,36 @@ Matrix Matrix::append(Matrix toAppend, bool row){
         (*this) = this->insert(toAppend, rows, true);
     else
         (*this) = this->insert(toAppend, cols, false);
+    
+    return (*this);
+}
+
+Matrix Matrix::del(size_t startIdx, size_t endIdx, bool row){
+    // Start idx and end idx are inclusive [startIdx, endIdx]
+
+    if(row){
+        if(startIdx < 0 || startIdx >= this->rows || endIdx < 0 || endIdx >= this->rows || endIdx < startIdx)
+            throw std::invalid_argument("Indexes out of range");
+
+        this->values.erase(this->values.begin() + startIdx*this->cols, this->values.begin() + endIdx*this->cols);
+
+        this->rows = rows - (endIdx - startIdx + 1);
+
+    }else{
+        if(startIdx < 0 || startIdx >= this->cols || endIdx < 0 || endIdx >= this->cols || endIdx < startIdx)
+            throw std::invalid_argument("Indexes out of range");
+
+        size_t end = this->values.size();
+        size_t numDeleted = 0;
+        for(size_t i = 0; i < end; i += cols){
+            for(size_t col = startIdx; col <= endIdx; col++){
+                this->values.erase(this->values.begin() + i + col - numDeleted);
+                numDeleted++;
+            }
+        }
+
+        this->cols = cols - (endIdx - startIdx + 1);
+    }
     
     return (*this);
 }

@@ -49,6 +49,7 @@ class Matrix{
         Matrix applyFunction(float function(float));
         Matrix insert(Matrix toAppend, size_t idx, bool row=true);
         Matrix append(Matrix toAppend, bool row=true);
+        Matrix del(size_t startIdx, size_t endIdx, bool row=true);
 
         // Static operators
         static Matrix multiply(Matrix matrix1, Matrix matrix2);
