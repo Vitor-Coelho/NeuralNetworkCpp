@@ -13,12 +13,16 @@ using namespace std;
 
 int main(){
     std::normal_distribution<float> dist(-1, 1);
-    NeuralNetwork nn(NUM_LAYERS, {new FCLayer(LAYER1), new FCLayer(LAYER2), new FCLayer(LAYER3)});
+    NeuralNetwork nn (NUM_LAYERS, {new FCLayer(LAYER1), new FCLayer(LAYER2), new FCLayer(LAYER3)});
+    NeuralNetwork nn2(NUM_LAYERS, {new FCLayer(LAYER1), new FCLayer(LAYER2), new FCLayer(LAYER3)});
 
     nn.printInfo();
+    nn2.printInfo();
 
     Matrix<float> output = nn.feedforward(Matrix<float>(1, 5, dist));
+    output.print();
 
+    output = nn2.feedforward(Matrix<float>(1, 5, dist));
     output.print();
 
     return 0;

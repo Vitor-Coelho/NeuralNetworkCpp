@@ -4,17 +4,19 @@
 #include <cmath>
 #include "matrix.hpp"
 
-Matrix<float> sigmoid(Matrix<float> x){
+typedef Matrix<float> (*activation_t) (Matrix<float>);
+
+inline Matrix<float> sigmoid(Matrix<float> x){
     auto func = [](float x){return 1/(1 + (float)exp(-x));};
     return x.applyFunction(func);
 }
 
-Matrix<float> relu(Matrix<float> x){
+inline Matrix<float> relu(Matrix<float> x){
     auto func = [](float x){return x > 0 ? x : 0;};
     return x.applyFunction(func);
 }
 
-Matrix<float> softmax(Matrix<float> x){
+inline Matrix<float> softmax(Matrix<float> x){
     auto func = [](float x){return (float) exp(x);};
     x = x.applyFunction(func);
     float expSum = x.sum();
