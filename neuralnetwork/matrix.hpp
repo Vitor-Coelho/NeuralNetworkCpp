@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <string>
 #include <time.h>
+#include <algorithm>
 
 
 #define ROW true
@@ -58,6 +59,14 @@ template <typename T> class Matrix{
         Matrix insert(Matrix toAppend, size_t idx, bool row=true);
         Matrix append(Matrix toAppend, bool row=true);
         Matrix del(size_t startIdx, size_t endIdx, bool row=true);
+
+        T max();
+        T min();
+        T mean();
+        T median();
+
+        size_t maxIdx();
+        size_t minIdx();
 
         //Matrix crossProduct(Matrix matrix);   //TODO
 
@@ -458,6 +467,85 @@ Matrix<T> Matrix<T>::del(size_t startIdx, size_t endIdx, bool row){
     }
     
     return result;
+}
+
+
+
+/* Statistics methods */
+template <typename T>
+T Matrix<T>::max(){
+    T maxValue = (*this)((size_t) 0, (size_t) 0);
+    for(size_t i = 0; i < this->rows; i++){
+        for(size_t j = 0; j < this->cols; j++){
+            if(maxValue < (*this)(i,j))
+                maxValue = (*this)(i,j);
+        }
+    }
+    return maxValue;
+}
+
+template <typename T>
+T Matrix<T>::min(){
+    T minValue = (*this)((size_t) 0, (size_t) 0);
+    for(size_t i = 0; i < this->rows; i++){
+        for(size_t j = 0; j < this->cols; j++){
+            if(minValue > (*this)(i,j))
+                minValue = (*this)(i,j);
+        }
+    }
+    return minValue;
+}
+
+template <typename T>
+T Matrix<T>::mean(){
+    T meanValue = 0;
+    for(size_t i = 0; i < this->rows; i++){
+        for(size_t j = 0; j < this->cols; j++){
+            meanValue += (*this)(i,j);
+        }
+    }
+    return meanValue / (this->rows*this->cols);
+}
+
+template <typename T>
+T Matrix<T>::median(){
+    std::vector<T> aux = *(this->getValues());
+    std::sort(aux.begin(), aux.end());
+    if(aux.size() % 2){
+        return aux.at(aux.size()/2);
+    }else{
+        return (aux.at(aux.size()/2) + aux.at(aux.size()/2 - 1)) / 2;
+    }
+}
+
+template <typename T>
+size_t Matrix<T>::maxIdx(){
+    T maxValue = (*this)((size_t) 0, (size_t) 0);
+    size_t idx = 0;
+    for(size_t i = 0; i < this->rows; i++){
+        for(size_t j = 0; j < this->cols; j++){
+            if(maxValue < (*this)(i,j)){
+                maxValue = (*this)(i,j);
+                idx = i*this->cols + j;
+            }
+        }
+    }
+    return idx;
+}
+
+template <typename T>
+size_t Matrix<T>::minIdx(){
+    T minValue = (*this)((size_t) 0, (size_t) 0);
+    size_t idx = 0;
+    for(size_t i = 0; i < this->rows; i++){
+        for(size_t j = 0; j < this->cols; j++){
+            if(minValue > (*this)(i,j)){
+                minValue = (*this)(i,j);
+                idx = i*this->cols + j;
+            }
+        }
+    }
+    return idx;
 }
 
 
