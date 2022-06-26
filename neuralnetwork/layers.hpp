@@ -16,6 +16,7 @@ class Layer{
         virtual size_t getInputSize() = 0;
         virtual size_t getOutputSize() = 0;
         virtual Matrix<float> getWeights() = 0;
+        activation_t getActivation();
 
         virtual void setWeights(Matrix<float> newWeights) = 0;
         virtual void setActivation(activation_t act) = 0;

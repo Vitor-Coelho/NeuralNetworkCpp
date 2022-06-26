@@ -31,4 +31,8 @@ size_t FCLayer::getOutputSize(){return outputSize;}
 
 Matrix<float> FCLayer::getWeights(){return weights;}
 
+activation_t FCLayer::getActivation(){return activation;}
+
 void FCLayer::setWeights(Matrix<float> newWeights){weights = newWeights;}
+
+void FCLayer::setActivation(activation_t act){activation = act;}
