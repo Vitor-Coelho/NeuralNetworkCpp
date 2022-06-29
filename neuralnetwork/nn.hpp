@@ -33,6 +33,7 @@ class NeuralNetwork{
         void operator=(NeuralNetwork nn);
 
         Matrix<float> feedforward(Matrix<float> input);
+        float train(Matrix<float> input, Matrix<float> target, float learningRate);
         void saveToFile(std::string path);
 };
 

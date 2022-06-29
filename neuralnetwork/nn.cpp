@@ -46,4 +46,17 @@ Matrix<float> NeuralNetwork::feedforward(Matrix<float> input){
     return input;
 }
 
+float NeuralNetwork::train(Matrix<float> input, Matrix<float> target, float learningRate){
+    for(auto layer = layers.begin(); layer != layers.end(); ++layer){
+        (*layer)->clearGrad();
+        input = (*layer)->train(input);
+    }
+
+    // Calculate cost and its error
+
+    for(auto layer = layers.end(); layer != layers.begin(); --layer){
+        Matrix<float> error = (*layer)->backpropagate(error, learningRate);
+    }
+}
+
 void NeuralNetwork::saveToFile(std::string path){} // TODO

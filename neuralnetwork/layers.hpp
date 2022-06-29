@@ -10,6 +10,9 @@
 class Layer{    
     public:
         virtual Matrix<float> feedforward(Matrix<float> input) = 0;
+        virtual Matrix<float> train(Matrix<float> input) = 0;
+        virtual Matrix<float> backpropagate(Matrix<float> error, float learningRate) = 0;
+        virtual void clearGrad() = 0;
         virtual void print() = 0;
         virtual void saveToFile() = 0;
 
@@ -28,12 +31,17 @@ class FCLayer : public Layer{
     private:
         Matrix<float> weights;
         activation_t activation;
+        Matrix<float> lastInput;
+        Matrix<float> gradient;
         size_t inputSize, outputSize;
         bool bias = true;
     
     public:
         FCLayer(size_t inputLen, size_t outputLen, activation_t act, bool addBias=true);
         Matrix<float> feedforward(Matrix<float> input);
+        Matrix<float> train(Matrix<float> input);
+        Matrix<float> backpropagate(Matrix<float> error, float learningRate);
+        void clearGrad();
         void print();
         void saveToFile();
 

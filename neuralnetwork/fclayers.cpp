@@ -18,7 +18,23 @@ FCLayer::FCLayer(size_t inputLen, size_t outputLen, activation_t act, bool addBi
 Matrix<float> FCLayer::feedforward(Matrix<float> input){
     if(bias)
         input = input.insert(Matrix<float>(1, 1, (std::string) "ones"), 0, COLUMN);  // Add bias
-    return activation(input * weights);
+    return activation(input * weights, false);
+}
+
+Matrix<float> FCLayer::train(Matrix<float> input){
+    lastInput = input;
+    return feedforward(input);
+}
+
+Matrix<float> FCLayer::backpropagate(Matrix<float> error, float learningRate){
+    error = activation(error, true);
+    gradient += lastInput.transpose() * error;
+    weights -= gradient*learningRate;
+    return error;
+}
+
+void FCLayer::clearGrad(){
+    gradient *= 0;
 }
 
 void FCLayer::print(){std::cout << ">> Fully connected layer"; weights.print();}
