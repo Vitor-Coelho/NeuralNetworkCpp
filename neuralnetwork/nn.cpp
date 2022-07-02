@@ -46,17 +46,23 @@ Matrix<float> NeuralNetwork::feedforward(Matrix<float> input){
     return input;
 }
 
-float NeuralNetwork::train(Matrix<float> input, Matrix<float> target, float learningRate){
+float NeuralNetwork::train(Matrix<float> input, Matrix<float> target, float learningRate, cost_t costFunc, cost_deriv_t costDer){
+    if(input.numRows() != target.numRows())
+        throw std::invalid_argument("Input and targets have different number of rows");
+
     for(auto layer = layers.begin(); layer != layers.end(); ++layer){
         (*layer)->clearGrad();
         input = (*layer)->train(input);
     }
 
-    // Calculate cost and its error
+    float error = costFunc(input, target);
+    Matrix<float> errorMatrix = costDer(input, target);
 
-    for(auto layer = layers.end(); layer != layers.begin(); --layer){
-        Matrix<float> error = (*layer)->backpropagate(error, learningRate);
+    for(auto layer = layers.rbegin(); layer != layers.rend(); ++layer){
+        errorMatrix = (*layer)->backpropagate(errorMatrix, learningRate);
     }
+
+    return error;
 }
 
 void NeuralNetwork::saveToFile(std::string path){} // TODO

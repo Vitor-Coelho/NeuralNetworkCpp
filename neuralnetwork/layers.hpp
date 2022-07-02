@@ -31,13 +31,14 @@ class FCLayer : public Layer{
     private:
         Matrix<float> weights;
         activation_t activation;
-        Matrix<float> lastInput;
+        act_deriv_t  actDerivative;
+        Matrix<float> lastInput, lastPreAct, lastOutput;
         Matrix<float> gradient;
         size_t inputSize, outputSize;
         bool bias = true;
     
     public:
-        FCLayer(size_t inputLen, size_t outputLen, activation_t act, bool addBias=true);
+        FCLayer(size_t inputLen, size_t outputLen, activation_t act, act_deriv_t actDer, bool addBias=true);
         Matrix<float> feedforward(Matrix<float> input);
         Matrix<float> train(Matrix<float> input);
         Matrix<float> backpropagate(Matrix<float> error, float learningRate);

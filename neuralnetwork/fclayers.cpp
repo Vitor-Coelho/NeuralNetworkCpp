@@ -3,10 +3,11 @@
 
 std::normal_distribution<float> dist(0,1);
 
-FCLayer::FCLayer(size_t inputLen, size_t outputLen, activation_t act, bool addBias){
+FCLayer::FCLayer(size_t inputLen, size_t outputLen, activation_t act, act_deriv_t actDer, bool addBias){
     inputSize = inputLen;
     outputSize = outputLen;
     activation = act;
+    actDerivative = actDer;
     bias = addBias;
 
     size_t rows = 0;
@@ -17,19 +18,24 @@ FCLayer::FCLayer(size_t inputLen, size_t outputLen, activation_t act, bool addBi
 
 Matrix<float> FCLayer::feedforward(Matrix<float> input){
     if(bias)
-        input = input.insert(Matrix<float>(1, 1, (std::string) "ones"), 0, COLUMN);  // Add bias
-    return activation(input * weights, false);
+        input = input.insert(Matrix<float>(input.numRows(), 1, (std::string) "ones"), 0, COLUMN);  // Add bias
+    return activation(input * weights);
 }
 
 Matrix<float> FCLayer::train(Matrix<float> input){
+    if(bias)
+        input = input.insert(Matrix<float>(input.numRows(), 1, (std::string) "ones"), 0, COLUMN);  // Add bias
     lastInput = input;
-    return feedforward(input);
+    lastPreAct = input * weights;
+    lastOutput = activation(lastPreAct);
+    return lastOutput;
 }
 
 Matrix<float> FCLayer::backpropagate(Matrix<float> error, float learningRate){
-    error = activation(error, true);
-    gradient += lastInput.transpose() * error;
+    error = actDerivative(lastPreAct, error);
+    gradient = lastInput.transpose() * error;
     weights -= gradient*learningRate;
+    error = error * weights(1, weights.numRows()-1, 0, weights.numCols()-1).transpose();
     return error;
 }
 

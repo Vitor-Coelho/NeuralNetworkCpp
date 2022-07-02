@@ -5,26 +5,30 @@
 #include "matrix.hpp"
 
 
-// TODO: adicionar as definições das derivadas das funções
+typedef float (*cost_t) (Matrix<float>, Matrix<float>);
+typedef Matrix<float> (*cost_deriv_t) (Matrix<float>, Matrix<float>);
 
 
-typedef Matrix<float> (*cost_t) (Matrix<float>, bool);
-
-inline Matrix<float> crossEntropy(Matrix<float> x, bool derivative){
-    auto func = [](float x){return 1/(1 + (float)exp(-x));};
-    return x.applyFunction(func);
+/* Cost functions */
+inline float crossEntropy(Matrix<float> y, Matrix<float> target){
+    auto log_ = [](float x){return (float) log(x);};
+    return target.multiply(y.applyFunction(log_)).sum() * -1;
 }
 
-inline Matrix<float> relu(Matrix<float> x, bool derivative){
-    auto func = [](float x){return x > 0 ? x : 0;};
-    return x.applyFunction(func);
+inline float MSE(Matrix<float> y, Matrix<float> target){
+    auto sqr_ = [](float x){return (float) pow(x, 2);};
+    return (target - y).applyFunction(sqr_).sum()/y.numRows();
 }
 
-inline Matrix<float> softmax(Matrix<float> x, bool derivative){
-    auto func = [](float x){return (float) exp(x);};
-    x = x.applyFunction(func);
-    float expSum = x.sum();
-    return x / expSum;
+
+/* Cost functions derivatives (error propagators) */
+inline Matrix<float> crossEntropyDerivative(Matrix<float> y, Matrix<float> target){
+    auto _x = [](float x){return 1/x;};
+    return target.multiply(y.applyFunction(_x)) * -1;
+}
+
+inline Matrix<float> MSEDerivative(Matrix<float> y, Matrix<float> target){
+    return ((target - y)*2).multiply(y)*(-1/y.numRows());
 }
 
 #endif
