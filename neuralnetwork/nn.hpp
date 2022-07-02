@@ -34,7 +34,7 @@ class NeuralNetwork{
         void operator=(NeuralNetwork nn);
 
         Matrix<float> feedforward(Matrix<float> input);
-        float train(Matrix<float> input, Matrix<float> target, float learningRate, cost_t costFunc, cost_deriv_t costDer);
+        float trainBatch(Matrix<float> input, Matrix<float> target, float learningRate, cost_t costFunc, cost_deriv_t costDer);
         void saveToFile(std::string path);
 };
 

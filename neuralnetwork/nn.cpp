@@ -46,12 +46,11 @@ Matrix<float> NeuralNetwork::feedforward(Matrix<float> input){
     return input;
 }
 
-float NeuralNetwork::train(Matrix<float> input, Matrix<float> target, float learningRate, cost_t costFunc, cost_deriv_t costDer){
+float NeuralNetwork::trainBatch(Matrix<float> input, Matrix<float> target, float learningRate, cost_t costFunc, cost_deriv_t costDer){
     if(input.numRows() != target.numRows())
         throw std::invalid_argument("Input and targets have different number of rows");
 
     for(auto layer = layers.begin(); layer != layers.end(); ++layer){
-        (*layer)->clearGrad();
         input = (*layer)->train(input);
     }
 

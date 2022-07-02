@@ -18,13 +18,20 @@ int main(){
 
     nn.printInfo();
 
+    Matrix<float> input(4, 5, dist);
     Matrix<float> target(4, 4);
     target.set(1, 0, 0);
     target.set(1, 1, 1);
     target.set(1, 2, 3);
     target.set(1, 3, 3);
 
-    float error = nn.train(Matrix<float>(4, 5, dist), target, 0.2, crossEntropy, crossEntropyDerivative);
+    float error = nn.trainBatch(input, target, 0.05, crossEntropy, crossEntropyDerivative);
+    cout << "Error: " << error << endl;
+
+    error = nn.trainBatch(input, target, 0.05, crossEntropy, crossEntropyDerivative);
+    cout << "Error: " << error << endl;
+
+    error = nn.trainBatch(input, target, 0.05, crossEntropy, crossEntropyDerivative);
     cout << "Error: " << error << endl;
 
     return 0;

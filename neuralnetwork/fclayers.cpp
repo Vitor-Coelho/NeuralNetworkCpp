@@ -33,14 +33,10 @@ Matrix<float> FCLayer::train(Matrix<float> input){
 
 Matrix<float> FCLayer::backpropagate(Matrix<float> error, float learningRate){
     error = actDerivative(lastPreAct, error);
-    gradient = lastInput.transpose() * error;
+    Matrix<float> gradient = lastInput.transpose() * error;
     weights -= gradient*learningRate;
     error = error * weights(1, weights.numRows()-1, 0, weights.numCols()-1).transpose();
     return error;
-}
-
-void FCLayer::clearGrad(){
-    gradient *= 0;
 }
 
 void FCLayer::print(){std::cout << ">> Fully connected layer"; weights.print();}
