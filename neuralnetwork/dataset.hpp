@@ -2,14 +2,12 @@
 #define DATASET_H
 
 #include <string>
+#include <fstream>
+#include <sstream>
 #include "matrix.hpp"
 
-// TODO: definir os métodos da classe Dataset
-// • nos métodos que envolvem CSV, colocar o path como o caminho + nome de arquivo, 
-//   mas os arquivos em si terão um sufixo de _trainIn, _trainOut... a depender de 
-//   quais destas separações o dataset possui
-// • nos métodos de se definir as matrizes, deve-se sempre iniciar colocando os inputs
-//   e depois os outputs, pois a qtd de linhas será testada nas definições de output
+#define DELIMITER ","
+
 
 class Dataset{
     private:
@@ -31,7 +29,7 @@ class Dataset{
         void writeToCsv(std::string path);
         static Matrix<float> getMatrixFromCsv(std::string path);
         static Dataset getDatasetFromCsv(std::string path);
-        void printInfo();       // Print dataset information (number of samples; pct of train, test, val; first five samples of train)
+        void print();   // Print dataset information (num samples; pct of train, test, val; first five samples of train)
         size_t getNumSamples(){return trainInput.numRows();};
 
         Matrix<float> getBatchInput();
@@ -45,12 +43,14 @@ class Dataset{
         Matrix<float> getValidationOutput(){return validationOutput;};
 
         void setBatchSize(size_t batchSize_){batchSize = batchSize_;};
-        Matrix<float> setTrainInput(Matrix<float> data);
-        Matrix<float> setTrainOutput(Matrix<float> data);
-        Matrix<float> setTestInput(Matrix<float> data);
-        Matrix<float> setTestOutput(Matrix<float> data);
-        Matrix<float> setValidationInput(Matrix<float> data);
-        Matrix<float> setValidationOutput(Matrix<float> data);
+        void setTrainInput(Matrix<float> data);
+        void setTrainOutput(Matrix<float> data);
+        void setTestInput(Matrix<float> data);
+        void setTestOutput(Matrix<float> data);
+        void setValidationInput(Matrix<float> data);
+        void setValidationOutput(Matrix<float> data);
+
+        void operator=(Dataset toCopy);
 };
 
 inline Dataset::Dataset(size_t batchSize_){
@@ -86,7 +86,7 @@ inline void Dataset::shuffle(){
     Matrix<float> oldInput = trainInput, oldOutput = trainOutput;
 
     std::generate(idxList.begin(), idxList.end(), [n=0]()mutable{return n++;});
-    std::shuffle(idxList.begin(), idxList.end(), mt);
+    std::shuffle(idxList.begin(), idxList.end(), mt());
 
     for(size_t i = 0; i < size; i++){
         trainInput.set(oldInput(idxList.at(i), ROW), i, ROW);
@@ -94,9 +94,123 @@ inline void Dataset::shuffle(){
     }
 }
 
-void writeDatasetToCsv(std::string path);
-static Dataset getMatrixFromCsv(std::string path);
-static Dataset getDatasetFromCsv(std::string path);
+inline void Dataset::writeToCsv(std::string path){
+    std::fstream fout;
+
+    fout.open(path + "_intrain", std::ios::out | std::ios::trunc);
+    for(size_t i = 0; i < trainInput.numRows(); i++){
+        for(size_t j = 0; j < trainInput.numCols(); j++){
+            fout << trainInput(i,j);
+            if(j != trainInput.numCols()-1)
+                fout << DELIMITER;
+        }
+        fout << "\n";
+    }
+
+    fout.open(path + "_outtrain", std::ios::out | std::ios::trunc);
+    for(size_t i = 0; i < trainOutput.numRows(); i++){
+        for(size_t j = 0; j < trainOutput.numCols(); j++){
+            fout << trainOutput(i,j);
+            if(j != trainOutput.numCols()-1)
+                fout << DELIMITER;
+        }
+        fout << "\n";
+    }
+
+    fout.open(path + "_intest", std::ios::out | std::ios::trunc);
+    for(size_t i = 0; i < testInput.numRows(); i++){
+        for(size_t j = 0; j < testInput.numCols(); j++){
+            fout << testInput(i,j);
+            if(j != testInput.numCols()-1)
+                fout << DELIMITER;
+        }
+        fout << "\n";
+    }
+
+    fout.open(path + "_outtest", std::ios::out | std::ios::trunc);
+    for(size_t i = 0; i < testOutput.numRows(); i++){
+        for(size_t j = 0; j < testOutput.numCols(); j++){
+            fout << testOutput(i,j);
+            if(j != testOutput.numCols()-1)
+                fout << DELIMITER;
+        }
+        fout << "\n";
+    }
+
+    fout.open(path + "_inval", std::ios::out | std::ios::trunc);
+    for(size_t i = 0; i < validationInput.numRows(); i++){
+        for(size_t j = 0; j < validationInput.numCols(); j++){
+            fout << validationInput(i,j);
+            if(j != validationInput.numCols()-1)
+                fout << DELIMITER;
+        }
+        fout << "\n";
+    }
+
+    fout.open(path + "_outval", std::ios::out | std::ios::trunc);
+    for(size_t i = 0; i < validationOutput.numRows(); i++){
+        for(size_t j = 0; j < validationOutput.numCols(); j++){
+            fout << validationOutput(i,j);
+            if(j != validationOutput.numCols()-1)
+                fout << DELIMITER;
+        }
+        fout << "\n";
+    }
+}
+
+inline static Matrix<float> getMatrixFromCsv(std::string path){
+    std::ifstream fin;
+
+    Matrix<float> data;
+    std::vector<float> row;
+  
+    fin.open(path, std::ios::in);
+
+    std::string line, word, temp;
+  
+    while(std::getline(fin, line)){
+        row.clear();
+        std::stringstream s(line);
+
+        while(std::getline(s, word, ',')){
+            row.push_back(std::stof(word));
+        }
+
+        data = data.append(Matrix<float>(row, (size_t) 1, row.size()), ROW);
+    }
+
+    return data;
+}
+
+inline static Dataset getDatasetFromCsv(std::string path){
+    Dataset dataset(1);
+    
+    dataset.setTrainInput(getMatrixFromCsv(path + "_intrain"));
+    dataset.setTrainOutput(getMatrixFromCsv(path + "_outtrain"));
+    dataset.setTestInput(getMatrixFromCsv(path + "_intest"));
+    dataset.setTestOutput(getMatrixFromCsv(path + "_outtest"));
+    dataset.setValidationInput(getMatrixFromCsv(path + "_inval"));
+    dataset.setValidationOutput(getMatrixFromCsv(path + "_outval"));
+
+    return dataset;
+}
+
+inline void Dataset::print(){
+    size_t trainSize, testSize, valSize, totalSize;
+    trainSize = trainInput.numRows();
+    testSize = testInput.numRows();
+    valSize = validationInput.numRows();
+    totalSize = trainSize + testSize + valSize;
+
+    std::cout << std::endl << "Number of samples: " << totalSize << std::endl;
+    std::cout << "Train samples: " << trainSize << " (" << trainSize/totalSize*100 << "%)" << std::endl;
+    std::cout << "Test samples: " << testSize << " (" << testSize/totalSize*100 << "%)" << std::endl;
+    std::cout << "Validation samples: " << valSize << " (" << valSize/totalSize*100 << "%)" << std::endl;
+
+    size_t printIdx = trainSize > 5 ? 5 : trainSize-1;
+    trainInput(0, printIdx, 0, trainInput.numCols()-1).print();
+    trainOutput(0, printIdx, 0, trainOutput.numCols()-1).print();
+}
 
 inline Matrix<float> Dataset::getBatchInput(){
     size_t dataEnd = dataIdx + batchSize < trainInput.numRows() ? dataIdx + batchSize : trainInput.numRows() - 1;
@@ -108,34 +222,43 @@ inline Matrix<float> Dataset::getBatchOutput(){
     return trainOutput(dataIdx, dataEnd, 0, trainOutput.numCols()-1);
 }
 
-inline Matrix<float> Dataset::setTrainInput(Matrix<float> data){
+inline void Dataset::setTrainInput(Matrix<float> data){
     trainInput = data;
 }
 
-inline Matrix<float> Dataset::setTrainOutput(Matrix<float> data){
+inline void Dataset::setTrainOutput(Matrix<float> data){
     if(data.numRows() != trainInput.numRows())
         throw std::invalid_argument("Number of samples different from input data");
     trainOutput = data;
 }
 
-inline Matrix<float> Dataset::setTestInput(Matrix<float> data){
+inline void Dataset::setTestInput(Matrix<float> data){
     testInput = data;
 }
 
-inline Matrix<float> Dataset::setTestOutput(Matrix<float> data){
+inline void Dataset::setTestOutput(Matrix<float> data){
     if(data.numRows() != testInput.numRows())
         throw std::invalid_argument("Number of samples different from input data");
     testOutput = data;
 }
 
-inline Matrix<float> Dataset::setValidationInput(Matrix<float> data){
+inline void Dataset::setValidationInput(Matrix<float> data){
     validationInput = data;
 }
 
-inline Matrix<float> Dataset::setValidationOutput(Matrix<float> data){
+inline void Dataset::setValidationOutput(Matrix<float> data){
     if(data.numRows() != validationInput.numRows())
         throw std::invalid_argument("Number of samples different from input data");
     validationOutput = data;
+}
+
+void Dataset::operator=(Dataset toCopy){
+    this->trainInput = toCopy.trainInput;
+    this->trainOutput = toCopy.trainOutput;
+    this->testInput = toCopy.testInput;
+    this->testOutput = toCopy.testOutput;
+    this->validationInput = toCopy.validationInput;
+    this->validationOutput = toCopy.validationOutput;
 }
 
 #endif

@@ -116,9 +116,9 @@ inline std::mt19937& mt(){static std::mt19937 mt_gen(time(NULL)); return mt_gen;
 /* Constructors and destructor */
 template <typename T>
 Matrix<T>::Matrix(){
-    this->rows = 1;
-    this->cols = 1;
-    this->values.resize(1, 0);    
+    this->rows = 0;
+    this->cols = 0;
+    this->values.clear();
 }
 
 template <typename T>
@@ -498,7 +498,7 @@ Matrix<T> Matrix<T>::insert(Matrix toAppend, size_t idx, bool row){
     Matrix result(*(this->getValues()), this->rows, this->cols);
 
     if(row){
-        if(cols != toAppend.cols)
+        if(cols != toAppend.cols && cols != 0)
             throw std::invalid_argument("Matrices must have the same number of columns");
 
         result.getValues()->insert(result.getValues()->begin()+result.numCols()*idx, 
@@ -506,9 +506,11 @@ Matrix<T> Matrix<T>::insert(Matrix toAppend, size_t idx, bool row){
                                   (*toAppend.getValues()).end());
 
         result.rows = result.rows + toAppend.numRows();
+        if(cols == 0)
+            result.cols = toAppend.cols;
 
     }else{
-        if(rows != toAppend.rows)
+        if(rows != toAppend.rows && rows != 0)
             throw std::invalid_argument("Matrices must have the same number of rows");
 
         size_t end = result.getValues()->size();
@@ -520,6 +522,8 @@ Matrix<T> Matrix<T>::insert(Matrix toAppend, size_t idx, bool row){
         }
 
         result.cols = cols + toAppend.numCols();
+        if(rows == 0)
+            result.rows = toAppend.rows;
     }
     
     return result;

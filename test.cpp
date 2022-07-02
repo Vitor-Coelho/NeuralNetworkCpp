@@ -3,6 +3,7 @@
 #include "neuralnetwork/nn.hpp"
 #include "neuralnetwork/layers.hpp"
 #include "neuralnetwork/costs.hpp"
+#include "neuralnetwork/dataset.hpp"
 
 using namespace std;
 
@@ -15,6 +16,14 @@ using namespace std;
 int main(){
     std::normal_distribution<float> dist(-1, 1);
     NeuralNetwork nn (NUM_LAYERS, {new FCLayer(LAYER1), new FCLayer(LAYER2), new FCLayer(LAYER3)});
+
+    Matrix<float> trainInput  = getMatrixFromCsv("../data/train_input.csv");
+    Matrix<float> trainOutput = getMatrixFromCsv("../data/train_output.csv");
+
+    Dataset dataset(1);
+    dataset.setTrainInput(trainInput);
+    dataset.setTrainOutput(trainOutput);
+    dataset.print();
 
     nn.printInfo();
 
