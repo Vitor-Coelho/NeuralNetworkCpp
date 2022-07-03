@@ -46,6 +46,19 @@ Matrix<float> NeuralNetwork::feedforward(Matrix<float> input){
     return input;
 }
 
+void NeuralNetwork::train(Dataset dataset, int epochs, float learningRate, cost_t costFunc, cost_deriv_t costDer){
+    while(epochs--){
+        float trainError = 0;
+        while(true){
+            trainError += trainBatch(dataset.getBatchInput(), dataset.getBatchOutput(), learningRate, costFunc, costDer);
+            if(!dataset.nextBatch())
+                break;
+        }
+        dataset.shuffle();
+        std::cout << "Epoch " << epochs << " | Train error: " << trainError << std::endl;
+    }
+}
+
 float NeuralNetwork::trainBatch(Matrix<float> input, Matrix<float> target, float learningRate, cost_t costFunc, cost_deriv_t costDer){
     if(input.numRows() != target.numRows())
         throw std::invalid_argument("Input and targets have different number of rows");

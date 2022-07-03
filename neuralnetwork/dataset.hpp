@@ -215,7 +215,7 @@ inline void Dataset::setValidationOutput(Matrix<float> data){
     validationOutput = data;
 }
 
-void Dataset::operator=(Dataset toCopy){
+inline void Dataset::operator=(Dataset toCopy){
     this->trainInput = toCopy.trainInput;
     this->trainOutput = toCopy.trainOutput;
     this->testInput = toCopy.testInput;

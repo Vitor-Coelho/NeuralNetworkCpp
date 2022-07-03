@@ -2,7 +2,10 @@
 #define COSTS_H
 
 #include <cmath>
+#include <cfloat>
 #include "matrix.hpp"
+
+#define MAX_ERROR 10000
 
 
 typedef float (*cost_t) (Matrix<float>, Matrix<float>);
@@ -23,7 +26,7 @@ inline float MSE(Matrix<float> y, Matrix<float> target){
 
 /* Cost functions derivatives (error propagators) */
 inline Matrix<float> crossEntropyDerivative(Matrix<float> y, Matrix<float> target){
-    auto _x = [](float x){return 1/x;};
+    auto _x = [](float x){return 1/x > MAX_ERROR ? MAX_ERROR : 1/x;};
     return target.multiply(y.applyFunction(_x)) * -1;
 }
 
