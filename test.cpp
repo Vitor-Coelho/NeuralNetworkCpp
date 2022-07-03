@@ -20,10 +20,14 @@ int main(){
     Matrix<float> trainInput  = getMatrixFromCsv("../data/train_input.csv");
     Matrix<float> trainOutput = getMatrixFromCsv("../data/train_output.csv");
 
-    Dataset dataset(1);
+    Dataset dataset(1), dataset2(1);
     dataset.setTrainInput(trainInput);
     dataset.setTrainOutput(trainOutput);
     dataset.print();
+
+    dataset.writeToCsv("../data/dataset");
+    dataset2 = getDatasetFromCsv("../data/dataset");
+    dataset2.print();
 
     nn.printInfo();
 

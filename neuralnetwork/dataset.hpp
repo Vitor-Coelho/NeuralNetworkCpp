@@ -6,7 +6,7 @@
 #include <sstream>
 #include "matrix.hpp"
 
-#define DELIMITER ","
+#define DELIMITER ','
 
 
 class Dataset{
@@ -94,68 +94,31 @@ inline void Dataset::shuffle(){
     }
 }
 
+inline static void writeMatrixToCsv(Matrix<float> matrix, std::string path){
+    std::fstream fout;
+
+    fout.open(path, std::ios::out | std::ios::trunc);
+    for(size_t i = 0; i < matrix.numRows(); i++){
+        for(size_t j = 0; j < matrix.numCols(); j++){
+            fout << matrix(i,j);
+            if(j != matrix.numCols()-1)
+                fout << DELIMITER;
+        }
+        fout << "\n";
+    }
+    fout.close();
+    fout.clear();
+}
+
 inline void Dataset::writeToCsv(std::string path){
     std::fstream fout;
 
-    fout.open(path + "_intrain", std::ios::out | std::ios::trunc);
-    for(size_t i = 0; i < trainInput.numRows(); i++){
-        for(size_t j = 0; j < trainInput.numCols(); j++){
-            fout << trainInput(i,j);
-            if(j != trainInput.numCols()-1)
-                fout << DELIMITER;
-        }
-        fout << "\n";
-    }
-
-    fout.open(path + "_outtrain", std::ios::out | std::ios::trunc);
-    for(size_t i = 0; i < trainOutput.numRows(); i++){
-        for(size_t j = 0; j < trainOutput.numCols(); j++){
-            fout << trainOutput(i,j);
-            if(j != trainOutput.numCols()-1)
-                fout << DELIMITER;
-        }
-        fout << "\n";
-    }
-
-    fout.open(path + "_intest", std::ios::out | std::ios::trunc);
-    for(size_t i = 0; i < testInput.numRows(); i++){
-        for(size_t j = 0; j < testInput.numCols(); j++){
-            fout << testInput(i,j);
-            if(j != testInput.numCols()-1)
-                fout << DELIMITER;
-        }
-        fout << "\n";
-    }
-
-    fout.open(path + "_outtest", std::ios::out | std::ios::trunc);
-    for(size_t i = 0; i < testOutput.numRows(); i++){
-        for(size_t j = 0; j < testOutput.numCols(); j++){
-            fout << testOutput(i,j);
-            if(j != testOutput.numCols()-1)
-                fout << DELIMITER;
-        }
-        fout << "\n";
-    }
-
-    fout.open(path + "_inval", std::ios::out | std::ios::trunc);
-    for(size_t i = 0; i < validationInput.numRows(); i++){
-        for(size_t j = 0; j < validationInput.numCols(); j++){
-            fout << validationInput(i,j);
-            if(j != validationInput.numCols()-1)
-                fout << DELIMITER;
-        }
-        fout << "\n";
-    }
-
-    fout.open(path + "_outval", std::ios::out | std::ios::trunc);
-    for(size_t i = 0; i < validationOutput.numRows(); i++){
-        for(size_t j = 0; j < validationOutput.numCols(); j++){
-            fout << validationOutput(i,j);
-            if(j != validationOutput.numCols()-1)
-                fout << DELIMITER;
-        }
-        fout << "\n";
-    }
+    writeMatrixToCsv(trainInput, path + "_intrain.csv");
+    writeMatrixToCsv(trainOutput, path + "_outtrain.csv");
+    writeMatrixToCsv(testInput, path + "_intest.csv");
+    writeMatrixToCsv(testOutput, path + "_outtest.csv");
+    writeMatrixToCsv(validationInput, path + "_inval.csv");
+    writeMatrixToCsv(validationOutput, path + "_outval.csv");
 }
 
 inline static Matrix<float> getMatrixFromCsv(std::string path){
@@ -172,7 +135,7 @@ inline static Matrix<float> getMatrixFromCsv(std::string path){
         row.clear();
         std::stringstream s(line);
 
-        while(std::getline(s, word, ',')){
+        while(std::getline(s, word, DELIMITER)){
             row.push_back(std::stof(word));
         }
 
@@ -185,12 +148,12 @@ inline static Matrix<float> getMatrixFromCsv(std::string path){
 inline static Dataset getDatasetFromCsv(std::string path){
     Dataset dataset(1);
     
-    dataset.setTrainInput(getMatrixFromCsv(path + "_intrain"));
-    dataset.setTrainOutput(getMatrixFromCsv(path + "_outtrain"));
-    dataset.setTestInput(getMatrixFromCsv(path + "_intest"));
-    dataset.setTestOutput(getMatrixFromCsv(path + "_outtest"));
-    dataset.setValidationInput(getMatrixFromCsv(path + "_inval"));
-    dataset.setValidationOutput(getMatrixFromCsv(path + "_outval"));
+    dataset.setTrainInput(getMatrixFromCsv(path + "_intrain.csv"));
+    dataset.setTrainOutput(getMatrixFromCsv(path + "_outtrain.csv"));
+    dataset.setTestInput(getMatrixFromCsv(path + "_intest.csv"));
+    dataset.setTestOutput(getMatrixFromCsv(path + "_outtest.csv"));
+    dataset.setValidationInput(getMatrixFromCsv(path + "_inval.csv"));
+    dataset.setValidationOutput(getMatrixFromCsv(path + "_outval.csv"));
 
     return dataset;
 }
