@@ -176,12 +176,12 @@ inline void Dataset::print(){
 }
 
 inline Matrix<float> Dataset::getBatchInput(){
-    size_t dataEnd = dataIdx + batchSize < trainInput.numRows() ? dataIdx + batchSize : trainInput.numRows() - 1;
+    size_t dataEnd = dataIdx + batchSize - 1 < trainInput.numRows() ? dataIdx + batchSize - 1 : trainInput.numRows() - 1;
     return trainInput(dataIdx, dataEnd, 0, trainInput.numCols()-1);
 }
 
 inline Matrix<float> Dataset::getBatchOutput(){
-    size_t dataEnd = dataIdx + batchSize < trainOutput.numRows() ? dataIdx + batchSize : trainOutput.numRows() - 1;
+    size_t dataEnd = dataIdx + batchSize - 1 < trainOutput.numRows() ? dataIdx + batchSize - 1 : trainOutput.numRows() - 1;
     return trainOutput(dataIdx, dataEnd, 0, trainOutput.numCols()-1);
 }
 

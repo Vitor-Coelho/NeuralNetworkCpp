@@ -19,14 +19,16 @@ int main(){
     Matrix<float> trainInput  = getMatrixFromCsv("../data/input.csv");
     Matrix<float> trainOutput = getMatrixFromCsv("../data/output.csv");
 
-    Dataset dataset(50);
+    Dataset dataset(200);
     dataset.setTrainInput(trainInput);
     dataset.setTrainOutput(trainOutput);
+    dataset.shuffle();
     dataset.print();
 
     nn.printInfo();
 
-    nn.train(dataset, 500, 0.001, crossEntropy, crossEntropyDerivative);
+    nn.train(dataset, 300, 0.1, crossEntropy, crossEntropyDerivative);
+    //nn.train(dataset, 500, 0.1, MSE, MSEDerivative);
 
     return 0;
 }
