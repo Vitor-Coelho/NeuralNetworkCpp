@@ -27,8 +27,16 @@ int main(){
 
     nn.printInfo();
 
-    nn.train(dataset, 300, 0.1, crossEntropy, crossEntropyDerivative);
+    nn.train(dataset, 10, 0.1, crossEntropy, crossEntropyDerivative);
     //nn.train(dataset, 500, 0.1, MSE, MSEDerivative);
+
+    nn.printInfo();
+
+    nn.saveToFile("../data/neural/");
+
+    nn = NeuralNetwork::fromFile("../data/neural/");
+
+    nn.printInfo();
 
     return 0;
 }

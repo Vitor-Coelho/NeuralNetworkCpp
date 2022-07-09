@@ -54,3 +54,5 @@ activation_t FCLayer::getActivation(){return activation;}
 void FCLayer::setWeights(Matrix<float> newWeights){weights = newWeights;}
 
 void FCLayer::setActivation(activation_t act){activation = act;}
+
+void FCLayer::setActDer(act_deriv_t derv){actDerivative = derv;}
