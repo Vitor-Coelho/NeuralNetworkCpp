@@ -16,19 +16,16 @@ int main(){
     std::normal_distribution<float> dist(-1, 1);
     NeuralNetwork nn (NUM_LAYERS, {new FCLayer(LAYER1), new FCLayer(LAYER2)});
 
-    Matrix<float> trainInput  = getMatrixFromCsv("../data/input.csv");
-    Matrix<float> trainOutput = getMatrixFromCsv("../data/output.csv");
+    Matrix<float> input  = getMatrixFromCsv("../data/input.csv");
+    Matrix<float> output = getMatrixFromCsv("../data/output.csv");
 
-    Dataset dataset(200);
-    dataset.setTrainInput(trainInput);
-    dataset.setTrainOutput(trainOutput);
+    Dataset dataset(input, output, 300, 0.85, 0.15, 0);
     dataset.shuffle();
     dataset.print();
 
     nn.printInfo();
 
-    nn.train(dataset, 10, 0.1, crossEntropy, crossEntropyDerivative);
-    //nn.train(dataset, 500, 0.1, MSE, MSEDerivative);
+    nn.train(dataset, 300, 0.1, crossEntropy, crossEntropyDerivative);
 
     nn.printInfo();
 

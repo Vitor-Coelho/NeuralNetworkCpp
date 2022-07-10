@@ -57,14 +57,18 @@ Matrix<float> NeuralNetwork::feedforward(Matrix<float> input){
 
 void NeuralNetwork::train(Dataset dataset, int epochs, float learningRate, cost_t costFunc, cost_deriv_t costDer){
     while(epochs--){
-        float trainError = 0;
+        float trainError = 0, testError;
+
         while(true){
             trainError += trainBatch(dataset.getBatchInput(), dataset.getBatchOutput(), learningRate, costFunc, costDer);
             if(!dataset.nextBatch())
                 break;
         }
+        
+        testError = costFunc(feedforward(dataset.getTestInput()), dataset.getTestOutput());
         dataset.shuffle();
-        std::cout << "Epoch " << epochs << " | Train error: " << trainError << std::endl;
+        
+        std::cout << "Epoch " << epochs << " | Train error: " << trainError << " | Test error: " << testError << std::endl;
     }
 }
 
