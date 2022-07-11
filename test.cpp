@@ -8,8 +8,8 @@
 using namespace std;
 
 #define NUM_LAYERS  3
-#define LAYER1      (size_t)  8, (size_t)  6, relu   , reluDerivative
-#define LAYER2      (size_t)  6, (size_t)  4, softmax, softmaxDerivative
+#define LAYER1      (size_t)  8, (size_t)  6, "relu"
+#define LAYER2      (size_t)  6, (size_t)  4, "softmax"
 
 
 int main(){
@@ -25,7 +25,7 @@ int main(){
 
     nn.printInfo();
 
-    nn.train(dataset, 300, 0.1, crossEntropy, crossEntropyDerivative);
+    nn.train(dataset, 750, 0.1, crossEntropy, crossEntropyDerivative);
 
     nn.printInfo();
 

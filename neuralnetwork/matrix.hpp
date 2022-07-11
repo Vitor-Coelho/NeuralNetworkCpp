@@ -62,6 +62,7 @@ template <typename T> class Matrix{
         Matrix<T> sum(int how);
         Matrix transpose();
         Matrix abs();
+        Matrix filter(Matrix filter, size_t stride, bool padding);
 
         Matrix applyFunction(T function(T));
         Matrix applyFunction(Matrix function(Matrix), int how=MATRIX_WISE);
@@ -457,6 +458,46 @@ Matrix<T> Matrix<T>::transpose(){
 template <typename T>
 Matrix<T> Matrix<T>::abs(){
     return this->applyFunction([](T x){return x > 0 ? x : -x;});
+}
+
+template <typename T>
+Matrix<T> Matrix<T>::filter(Matrix filter, size_t stride, bool padding){
+    Matrix<T> original = *this;
+    size_t resultRows, resultCols;
+    
+    if(padding){
+        resultRows = (this->numRows() + stride - 1)/stride;
+        resultCols = (this->numCols() + stride - 1)/stride;
+
+        int numPadRow = filter.numRows() - 1;
+        int numPadCol = filter.numCols() - 1;
+
+        while(numPadRow){
+            original = original.insert(Matrix<T>(1, original.numCols()), 0, ROW);
+            original = original.append(Matrix<T>(1, original.numCols()), ROW);
+            numPadRow -= 2;
+        }
+
+        while(numPadCol){
+            original = original.insert(Matrix<T>(original.numRows(), 1), 0, COLUMN);
+            original = original.append(Matrix<T>(original.numRows(), 1), COLUMN);
+            numPadCol -= 2;
+        }
+    }else{
+        resultRows = (this->numRows() - filter.numRows() + stride)/stride;
+        resultCols = (this->numCols() - filter.numCols() + stride)/stride;
+    }
+
+    Matrix<T> result(resultRows, resultCols);
+
+    for(size_t i = 0; i < resultRows; i++){
+        for(size_t j = 0; j < resultCols; j++){
+            T value = original(i*stride, i*stride+filter.numRows()-1, j*stride, j*stride+filter.numCols()-1).dotProduct(filter);
+            result.set(value, i, j);
+        }
+    }
+
+    return result;
 }
 
 template <typename T>

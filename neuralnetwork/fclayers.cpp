@@ -3,11 +3,11 @@
 
 std::normal_distribution<float> dist(0,1);
 
-FCLayer::FCLayer(size_t inputLen, size_t outputLen, activation_t act, act_deriv_t actDer, bool addBias){
+FCLayer::FCLayer(size_t inputLen, size_t outputLen, std::string activation_, bool addBias){
     inputSize = inputLen;
     outputSize = outputLen;
-    activation = act;
-    actDerivative = actDer;
+    activation = strToFunc(activation_);
+    actDerivative = strToDerivative(activation_);
     bias = addBias;
 
     size_t rows = 0;
@@ -22,7 +22,7 @@ Matrix<float> FCLayer::feedforward(Matrix<float> input){
     return activation(input * weights);
 }
 
-Matrix<float> FCLayer::train(Matrix<float> input){
+Matrix<float> FCLayer::feedWithMemory(Matrix<float> input){
     if(bias)
         input = input.insert(Matrix<float>(input.numRows(), 1, (std::string) "ones"), 0, COLUMN);  // Add bias
     lastInput = input;
@@ -49,10 +49,12 @@ size_t FCLayer::getOutputSize(){return outputSize;}
 
 Matrix<float> FCLayer::getWeights(){return weights;}
 
-activation_t FCLayer::getActivation(){return activation;}
+std::string FCLayer::getActivation(){return funcToStr(activation);}
 
 void FCLayer::setWeights(Matrix<float> newWeights){weights = newWeights;}
 
-void FCLayer::setActivation(activation_t act){activation = act;}
+void FCLayer::setActivation(std::string activation_){activation = strToFunc(activation_); actDerivative = strToDerivative(activation_);}
 
-void FCLayer::setActDer(act_deriv_t derv){actDerivative = derv;}
+std::vector<Matrix<float>> FCLayer::feedforward(std::vector<Matrix<float>> input){throw std::invalid_argument("Fully connected layers can't get vector of matrices as inputs");}
+std::vector<Matrix<float>> FCLayer::feedWithMemory(std::vector<Matrix<float>> input){throw std::invalid_argument("Fully connected layers can't get vector of matrices as inputs");}
+std::vector<Matrix<float>> FCLayer::backpropagate(std::vector<Matrix<float>> error, float learningRate){throw std::invalid_argument("Fully connected layers can't get vector of matrices as inputs");}

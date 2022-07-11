@@ -4,8 +4,11 @@
 #include <cmath>
 #include "matrix.hpp"
 
+/* Number of defined activation functions (used to create look-up table) */
 #define DEFINED_FUNCTIONS 3
 
+
+/* Function pointer types */
 typedef Matrix<float> (*activation_t) (Matrix<float>);
 typedef Matrix<float> (*act_deriv_t)  (Matrix<float>, Matrix<float>);
 
@@ -48,9 +51,11 @@ inline Matrix<float> softmaxDerivative(Matrix<float> x, Matrix<float> error){
     return result;
 }
 
+/* Function and string structs (used in look-up table) */
 typedef struct func_n {activation_t func; std::string funcName;} func_n;
 typedef struct derv_n {act_deriv_t func;  std::string dervName;} derv_n;
 
+/* Look-up tables for activations and activation derivatives */
 static struct func_n listFunc[DEFINED_FUNCTIONS] = {{sigmoid, "sigmoid"},
                                                     {relu,    "relu"},
                                                     {softmax, "softmax"}};
@@ -59,6 +64,7 @@ static struct derv_n listDerv[DEFINED_FUNCTIONS] = {{sigmoidDerivative, "sigmoid
                                                     {reluDerivative,    "relu"},
                                                     {softmaxDerivative, "softmax"}};
 
+/* String-function converters */
 inline std::string funcToStr(activation_t func){
     for(int i = 0; i < DEFINED_FUNCTIONS; i++){
         if(func == listFunc[i].func){

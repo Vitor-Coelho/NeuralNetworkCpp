@@ -11,8 +11,15 @@
 #include "costs.hpp"
 #include "dataset.hpp"
 
-// Entrada: vetor linha (Matrix(1,n))
 
+// TODO
+// • criar as layers com a string da função de ativação (com ela, olhar look-up tables para definir as funções, o mesmo vale para o método set activation)
+// • método de salvar layer para arquivo recebe o path origem + número para escrever num_info.txt e num.txt - informações e dados (ex.: 2_info.txt e 2.txt)
+// • criar um método para concatenar redes -> por exemplo uma convolucional com uma fully connected (só garantir tamanhos corretos na interface)
+// • revisar includes
+// • rever getInputSize e OutputSize da FCLayer (utilidade e como melhorar)
+// • fazer o mesmo que é feito para activation functions nas cost functions
+// • comentar e organizar os códigos
 
 class NeuralNetwork{
 

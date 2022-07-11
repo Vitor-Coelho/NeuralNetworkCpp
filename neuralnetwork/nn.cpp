@@ -6,7 +6,7 @@ NeuralNetwork::NeuralNetwork(size_t numberOfLayers){
     inputSize = 0;
     outputSize = 0;
     for(size_t i = 0; i < numberOfLayers - 1; i++)
-        layers.push_back(new FCLayer(0,0,sigmoid,sigmoidDerivative));
+        layers.push_back(new FCLayer(0,0,"sigmoid"));
 }
 
 NeuralNetwork::NeuralNetwork(size_t numberOfLayers, std::vector<Layer*> NNLayers){
@@ -77,7 +77,7 @@ float NeuralNetwork::trainBatch(Matrix<float> input, Matrix<float> target, float
         throw std::invalid_argument("Input and targets have different number of rows");
 
     for(auto layer = layers.begin(); layer != layers.end(); ++layer){
-        input = (*layer)->train(input);
+        input = (*layer)->feedWithMemory(input);
     }
 
     float error = costFunc(input, target);
@@ -97,7 +97,7 @@ void NeuralNetwork::saveToFile(std::string path){
     fout << this->getNumLayers() << "," << this->getInputSize() << "," << this->getOutputSize() << "\n";
 
     for(auto layer = layers.begin(); layer != layers.end(); ++layer){
-        fout << funcToStr((*layer)->getActivation());
+        fout << (*layer)->getActivation();
         if(layer != layers.end() - 1)
             fout << ",";
     }
@@ -130,8 +130,7 @@ NeuralNetwork NeuralNetwork::fromFile(std::string path){
     std::getline(fin, line);
     int idx = 0;
     while(std::getline(s, word, DELIMITER)){
-        nn.getLayers().at(idx)->setActivation(strToFunc(word));
-        nn.getLayers().at(idx)->setActDer(strToDerivative(word));
+        nn.getLayers().at(idx)->setActivation(word);
         idx++;
     }
 
