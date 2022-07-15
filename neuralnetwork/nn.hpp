@@ -13,6 +13,10 @@
 
 
 // TODO
+// • refatorar as layers convolucionais para obter o número de channels (depth) -> criar classe 3DTensor para conseguir interpretar imagens
+//   daí, os filtros da conv layer serão 3DTensor também, pois eles serão aplicados às imagens e resultarão em outros 3DTensor
+//   as entradas de treino serão vetores de 3DTensor!
+//   a flatten layer pega cada 3DTensor e coloca em uma linha (pois vira um sample para a FCLayer)
 // • método de salvar layer para arquivo recebe o path origem + número para escrever num_info.txt e num.txt - informações e dados (ex.: 2_info.txt e 2.txt)
 // • criar um método para concatenar redes -> por exemplo uma convolucional com uma fully connected (só garantir tamanhos corretos na interface)
 // • revisar includes
@@ -21,6 +25,8 @@
 // • comentar e organizar os códigos
 // • nn.print(bool detailed) -> se detailed for false, apenas as informações gerais das camadas são printadas
 //   se for true, printa com os pesos etc (layer.print também receberá bool detailed)
+// • criar normalização e standardisation em Dataset (ver também batch normalization vs data normalization)
+// • implementar regularization
 
 class NeuralNetwork{
 
