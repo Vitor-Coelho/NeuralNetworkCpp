@@ -149,9 +149,7 @@ void Tensor3D<T>::set(Matrix<T> matrix, size_t channel){
 
 template <typename T>
 void Tensor3D<T>::set(T value, size_t row, size_t col, size_t channel){
-    Matrix<T> temp = (*this)(channel);
-    temp.set(value, row, col);
-    this->set(temp, channel);
+    this->data.at(channel).set(value, row, col);
 }
 
 template <typename T>
@@ -169,7 +167,7 @@ void Tensor3D<T>::print(){
     std::cout << std::endl;
     for(size_t idx = 0; idx < channels; idx++){
         std::cout << "Channel " << idx << ":" << std::endl;
-        ((*this)(idx)).print();
+        (this->data.at(idx)).print();
     }
     std::cout << std::endl;
 }
@@ -179,7 +177,7 @@ void Tensor3D<T>::print(){
 template <typename T>
 bool Tensor3D<T>::equalTo(Tensor3D matrix){
     for(size_t idx = 0; idx < channels; idx++){
-        if(!((*this)(idx) == matrix(idx)))
+        if(!(this->data.at(idx) == matrix(idx)))
             return false;
     }
     return true;
@@ -187,21 +185,21 @@ bool Tensor3D<T>::equalTo(Tensor3D matrix){
 
 template <typename T>
 Tensor3D<T> Tensor3D<T>::filter(Tensor3D filter, size_t stride, bool padding){
-    Tensor3D result = *this;
+    Tensor3D result(this->numRows(), this->numCols(), this->numChannels());
     
     for(size_t idx = 0; idx < channels; idx++){
-        result.set((*this)(idx).filter(filter(idx), stride, padding), idx);
-    }    
+        result.set(this->data.at(idx).filter(filter(idx), stride, padding), idx);
+    }
 
     return result;
 }
 
 template <typename T>
 Tensor3D<T> Tensor3D<T>::applyFunction(Matrix<T> function(Matrix<T>)){
-    Tensor3D result = *this;
+    Tensor3D result(this->numRows(), this->numCols(), this->numChannels());
 
     for(size_t idx = 0; idx < channels; idx++){
-        result.set((*this)(idx).applyFunction(function), idx);
+        result.set(this->data.at(idx).applyFunction(function), idx);
     }
 
     return result;
@@ -209,10 +207,10 @@ Tensor3D<T> Tensor3D<T>::applyFunction(Matrix<T> function(Matrix<T>)){
 
 template <typename T>
 Tensor3D<T> Tensor3D<T>::add(T value){
-    Tensor3D result = *this;
+    Tensor3D result(this->numRows(), this->numCols(), this->numChannels());
 
     for(size_t idx = 0; idx < channels; idx++){
-        result.set((*this)(idx) + value, idx);
+        result.set(this->data.at(idx) + value, idx);
     }
 
     return result;
@@ -220,10 +218,10 @@ Tensor3D<T> Tensor3D<T>::add(T value){
 
 template <typename T>
 Tensor3D<T> Tensor3D<T>::add(Tensor3D tensor){
-    Tensor3D result = *this;
+    Tensor3D result(this->numRows(), this->numCols(), this->numChannels());
 
     for(size_t idx = 0; idx < channels; idx++){
-        result.set((*this)(idx) + tensor(idx), idx);
+        result.set(this->data.at(idx) + tensor(idx), idx);
     }
 
     return result;
@@ -241,10 +239,10 @@ Tensor3D<T> Tensor3D<T>::subtract(Tensor3D tensor){
 
 template <typename T>
 Tensor3D<T> Tensor3D<T>::multiply(T value){
-    Tensor3D result = *this;
+    Tensor3D result(this->numRows(), this->numCols(), this->numChannels());
 
     for(size_t idx = 0; idx < channels; idx++){
-        result.set((*this)(idx) * value, idx);
+        result.set(this->data.at(idx) * value, idx);
     }
 
     return result;
@@ -252,10 +250,10 @@ Tensor3D<T> Tensor3D<T>::multiply(T value){
 
 template <typename T>
 Tensor3D<T> Tensor3D<T>::multiply(Tensor3D tensor){
-    Tensor3D result = *this;
+    Tensor3D result(this->numRows(), this->numCols(), this->numChannels());
 
     for(size_t idx = 0; idx < channels; idx++){
-        result.set((*this)(idx).multiply(tensor(idx)), idx);
+        result.set(this->data.at(idx).multiply(tensor(idx)), idx);
     }
 
     return result;
@@ -312,7 +310,7 @@ Tensor3D<T> Tensor3D<T>::operator()(size_t startChannel, size_t endChannel){
 
 template <typename T>
 T Tensor3D<T>::operator()(size_t row, size_t col, size_t channel){
-    return (*this)(channel)(row, col);
+    return this->data.at(channel)(row, col);
 }
 
 template <typename T>

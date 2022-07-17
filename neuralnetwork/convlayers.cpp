@@ -2,7 +2,7 @@
 #include "activations.hpp"
 #include "tensor3d.hpp"
 
-std::normal_distribution<float> distConv(0,1);
+std::uniform_real_distribution<float> distConv(-1,1);
 
 ConvLayer::ConvLayer(size_t numFilters_, size_t filterRows, size_t filterCols, size_t width, size_t stride_, bool padding_, std::string activation_){
     numFilters = numFilters_;

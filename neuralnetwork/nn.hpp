@@ -13,12 +13,11 @@
 
 
 // TODO
-// • refatorar as layers convolucionais para obter o número de channels (depth) -> criar classe 3DTensor para conseguir interpretar imagens
-//   daí, os filtros da conv layer serão 3DTensor também, pois eles serão aplicados às imagens e resultarão em outros 3DTensor
-//   as entradas de treino serão vetores de 3DTensor!
+// • as entradas de treino serão vetores de 3DTensor, ou há outra forma melhor?
 //   a flatten layer pega cada 3DTensor e coloca em uma linha (pois vira um sample para a FCLayer)
 // • método de salvar layer para arquivo recebe o path origem + número para escrever num_info.txt e num.txt - informações e dados (ex.: 2_info.txt e 2.txt)
-// • criar um método para concatenar redes -> por exemplo uma convolucional com uma fully connected (só garantir tamanhos corretos na interface)
+// • criar um método para concatenar redes -> por exemplo uma convolucional com uma fully connected
+//   (deve-se garantir tamanhos corretos na interface)
 // • revisar includes
 // • rever getInputSize e OutputSize da FCLayer (utilidade e como melhorar)
 // • fazer o mesmo que é feito para activation functions nas cost functions
