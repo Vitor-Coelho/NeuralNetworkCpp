@@ -30,7 +30,7 @@ std::vector<Tensor3D<float>> ConvLayer::feedforward(std::vector<Tensor3D<float>>
     return result;
 }
 
-// Helper function to allow feedforward with only one matrix
+// Helper function to allow feedforward with only one tensor
 Tensor3D<float> ConvLayer::feedforward(Tensor3D<float> input){
     std::vector<Tensor3D<float>> input_;
     input_.push_back(input);
@@ -55,13 +55,66 @@ std::vector<Tensor3D<float>> ConvLayer::feedWithMemory(std::vector<Tensor3D<floa
     return lastOutput;
 }
 
-// Tensor3D<float> ConvLayer::backpropagate(Tensor3D<float> error, float learningRate){
-//     error = actDerivative(lastPreAct, error);
-//     Tensor3D<float> gradient = lastInput.transpose() * error / lastInput.numRows();
-//     weights -= gradient*learningRate;
-//     error = error * weights(1, weights.numRows()-1, 0, weights.numCols()-1).transpose();
-//     return error;
-// }
+std::vector<Tensor3D<float>> ConvLayer::backpropagate(std::vector<Tensor3D<float>> error, float learningRate){
+    /* Derivative of the activation function */
+    for(size_t sample = 0; sample < error.size(); sample++){
+        for(size_t ch = 0; ch < this->filterWidth; ch++){
+            error.at(sample).set(actDerivative(lastPreAct.at(sample)(ch), error.at(sample)(ch)), ch);
+        }
+    }
+
+    /* Update filters based on error */
+    for(size_t filterIdx = 0; filterIdx < numFilters; filterIdx++){
+        filters.at(filterIdx) = filters.at(filterIdx) - backpropKernel(error, filterIdx) * learningRate;
+    }
+    
+    /* Update error for the next layer */
+    // error = error * weights(1, weights.numRows()-1, 0, weights.numCols()-1).transpose();
+    return error;
+}
+
+Tensor3D<float> ConvLayer::backpropKernel(std::vector<Tensor3D<float>> error, size_t numFilter){
+    Tensor3D<float> kernelError;
+    for(size_t sample = numFilter; sample < error.size(); sample += this->numFilters){
+        for(size_t ch = 0; ch < this->filterWidth; ch++){
+            kernelError(ch) += filterDeriv(error.at(sample)(ch), lastInput.at(sample)(ch), stride, padding);
+        }
+    }
+    return kernelError;
+}
+
+Matrix<float> ConvLayer::filterDeriv(Matrix<float> error, Matrix<float> lastIn, size_t stride, bool padding){
+    
+    Matrix<float> input = lastIn;
+    size_t rowSize, colSize;
+    
+    if(padding){
+        int numPadRow = filterRowSize - 1;
+        int numPadCol = filterColSize - 1;
+
+        while(numPadRow){
+            input = input.insert(Matrix<float>(1, input.numCols()), 0, ROW);
+            input = input.append(Matrix<float>(1, input.numCols()), ROW);
+            numPadRow -= 2;
+        }
+
+        while(numPadCol){
+            input = input.insert(Matrix<float>(input.numRows(), 1), 0, COLUMN);
+            input = input.append(Matrix<float>(input.numRows(), 1), COLUMN);
+            numPadCol -= 2;
+        }
+    }
+
+    Matrix<float> kernelDeriv(filterRowSize, filterColSize);
+
+    for(size_t i = 0; i < error.numRows(); i++){
+        for(size_t j = 0; j < error.numCols(); j++){
+            kernelDeriv += lastIn(i*stride, i*stride + filterRowSize - 1, j*stride, j*stride + filterColSize - 1) * error(i, j);
+        }
+    }
+
+    return kernelDeriv;
+}
 
 void ConvLayer::print(){
     std::cout << ">> Convolutional layer" << std::endl;

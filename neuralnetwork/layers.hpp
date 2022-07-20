@@ -85,7 +85,11 @@ class ConvLayer : public Layer{
         Tensor3D<float> feedforward(Tensor3D<float> input);
         std::vector<Tensor3D<float>> feedforward(std::vector<Tensor3D<float>> input);
         std::vector<Tensor3D<float>> feedWithMemory(std::vector<Tensor3D<float>> input);
-        std::vector<Tensor3D<float>> backpropagate(std::vector<Tensor3D<float>> error, float learningRate); 
+        std::vector<Tensor3D<float>> backpropagate(std::vector<Tensor3D<float>> error, float learningRate);
+
+        /* Auxiliar backprop functions */
+        Tensor3D<float> backpropKernel(std::vector<Tensor3D<float>> error, size_t numFilter);
+        Matrix<float>   filterDeriv(Matrix<float> error, Matrix<float> lastIn, size_t stride, bool padding);
 
         void print();
         void saveToFile();
