@@ -55,6 +55,7 @@ void FCLayer::setWeights(Matrix<float> newWeights){weights = newWeights;}
 
 void FCLayer::setActivation(std::string activation_){activation = strToFunc(activation_); actDerivative = strToDerivative(activation_);}
 
+Tensor3D<float> FCLayer::feedforward(Tensor3D<float> input){throw std::invalid_argument("Fully connected layers can't get vector of matrices as inputs");}
 std::vector<Tensor3D<float>> FCLayer::feedforward(std::vector<Tensor3D<float>> input){throw std::invalid_argument("Fully connected layers can't get vector of matrices as inputs");}
 std::vector<Tensor3D<float>> FCLayer::feedWithMemory(std::vector<Tensor3D<float>> input){throw std::invalid_argument("Fully connected layers can't get vector of matrices as inputs");}
 std::vector<Tensor3D<float>> FCLayer::backpropagate(std::vector<Tensor3D<float>> error, float learningRate){throw std::invalid_argument("Fully connected layers can't get vector of matrices as inputs");}

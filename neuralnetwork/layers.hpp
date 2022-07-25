@@ -21,13 +21,8 @@ class Layer{
 
         virtual void print() = 0;
         virtual void saveToFile() = 0;
-
-        virtual size_t getInputSize() = 0;
-        virtual size_t getOutputSize() = 0;
-        virtual Matrix<float> getWeights() = 0;
+        
         virtual std::string getActivation() = 0;
-
-        virtual void setWeights(Matrix<float> newWeights) = 0;
         virtual void setActivation(std::string activation_) = 0;
 };
 
