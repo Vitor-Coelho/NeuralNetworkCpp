@@ -30,7 +30,7 @@
 class NeuralNetwork{
 
     private:
-        size_t numLayers, inputSize, outputSize;
+        size_t numLayers;
         std::vector<Layer*> layers;
 
     public:

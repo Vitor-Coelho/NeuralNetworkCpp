@@ -125,7 +125,7 @@ void ConvLayer::print(){
     }
 }
 
-void ConvLayer::saveToFile(){}
+void ConvLayer::saveToFile(std::string path, int idx){}
 
 size_t ConvLayer::getfilterRowSize(){return filterRowSize;}
 

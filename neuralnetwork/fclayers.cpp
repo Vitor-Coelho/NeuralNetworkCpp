@@ -39,9 +39,11 @@ Matrix<float> FCLayer::backpropagate(Matrix<float> error, float learningRate){
     return error;
 }
 
+void FCLayer::setLayer(Layer * layer){}
+
 void FCLayer::print(){std::cout << ">> Fully connected layer"; weights.print();}
 
-void FCLayer::saveToFile(){}
+void FCLayer::saveToFile(std::string path, int idx){}
 
 size_t FCLayer::getInputSize(){return inputSize;}
 
